@@ -1,0 +1,311 @@
+This API allows for managing players, achievements, and leaderboard data for your game. You can add new players, assign achievements, view leaderboards, and perform CRUD operations to manage game data efficiently.
+
+
+================ PlayerController API Documentation ================
+The PlayerController provides API endpoints to manage player entities in the system. It supports CRUD (Create, Read, Update, Delete) operations and allows interaction with player data, including player achievements, leaderboard information, and team memberships.
+
+1. GET /api/player
+- Description:
+This endpoint retrieves a list of all players, including their associated leaderboard entries, achievements, and team memberships.
+- Query Parameters:
+None
+- Response:
+200 OK: A list of players with their related data (leaderboards, achievements, and team memberships).
+
+2. GET /api/player/{id}
+- Description:
+This endpoint retrieves a specific player's details, including their associated leaderboard entries, achievements, and team memberships by the provided player ID.
+- Path Parameters:
+id (integer): The ID of the player.
+- Response:
+200 OK: The player details with their related data.
+404 Not Found: If the player with the specified ID does not exist.
+
+3. POST /api/player
+- Description:
+This endpoint creates a new player in the system with the provided player details.
+- Request Body:
+The request body should contain the player data, including the following properties:
+	-> Name (string, required): The name of the player.
+	-> Email (string, required): The email address of the player.
+	-> GameId (integer, required): The ID of the game the player is associated with.
+	-> Achievements (array of integers, optional): A list of achievement IDs the player has earned.
+	-> LeaderboardEntries (array of integers, optional): A list of leaderboard entry IDs associated with the player.
+	-> Teams (array of integers, optional): A list of team IDs the player is a part of.
+- Response:
+201 Created: The player was successfully created, with the player details returned.
+400 Bad Request: If the provided player data is invalid.
+
+4. PUT /api/player/{id}
+- Description:
+This endpoint updates an existing player's details based on the provided player ID. The player data must include the ID, and the ID in the path must match the one in the data.
+- Path Parameters:
+id (integer): The ID of the player.
+- Request Body:
+The request body should contain the updated player data with the following properties:
+	-> Id (integer, required): The player's ID. This must match the ID in the URL path.
+	-> Name (string, optional): The new name of the player.
+	-> Email (string, optional): The new email address of the player.
+	-> GameId (integer, optional): The ID of the game the player is associated with.
+	-> Achievements (array of integers, optional): A list of updated achievement IDs the player has earned.
+	-> LeaderboardEntries (array of integers, optional): A list of updated leaderboard entry IDs associated with the player.
+	-> Teams (array of integers, optional): A list of updated team IDs the player is a part of.
+- Response:
+204 No Content: The player was successfully updated.
+400 Bad Request: If the ID in the path does not match the player ID in the request body.
+404 Not Found: If the player with the specified ID does not exist.
+500 Internal Server Error: If there is a concurrency issue or another error while updating the player.
+
+5. DELETE /api/player/{id}
+- Description:
+This endpoint deletes a player from the system based on the provided player ID.
+- Path Parameters:
+id (integer): The ID of the player.
+- Response:
+204 No Content: The player was successfully deleted.
+404 Not Found: If the player with the specified ID does not exist.
+
+
+================ TeamController API Documentation ================
+The TeamController provides API endpoints to manage teams within the game management system. This includes retrieving teams, creating new teams, updating existing teams, and deleting teams.
+
+1. GET /api/team
+- Description:
+This endpoint retrieves a list of all teams, including their associated game information. It does not filter or limit the list unless specified via query parameters.
+- Query Parameters:
+None.
+- Response:
+200 OK: Returns a list of all teams, each containing details about the associated game.
+
+2. GET /api/team/{id}
+- Description:
+This endpoint retrieves the details of a specific team by its ID, including the associated game information and the players that belong to the team.
+- Path Parameters:
+id (integer): The ID of the team to retrieve.
+- Response:
+200 OK: Returns the details of the team, including the associated game and players.
+404 Not Found: If a team with the specified ID does not exist in the database.
+
+3. POST /api/team
+- Description:
+This endpoint creates a new team in the system. The provided request body should include all the necessary team details, including information about the associated game and players.
+- Request Body:
+The request body should contain the team data in JSON format, including the following properties:
+	-> Name (string, required): The name of the team.
+	-> GameId (integer, required): The ID of the game the team is associated with.
+	-> Players (array of integers, optional): A list of player IDs who are part of the team. Each player ID should be an integer.
+- Response:
+201 Created: The team was successfully created. The response includes the created team data, including its ID.
+400 Bad Request: If the provided team data is invalid or missing required information.
+
+4. PUT /api/team/{id}
+- Description:
+This endpoint updates the details of an existing team by ID. The request body must contain the updated team data, and the team ID in the URL path must match the team ID in the body.
+- Path Parameters:
+id (integer): The ID of the team to update.
+- Request Body:
+The request body should contain the updated team data, which may include:
+	-> Name (string, optional): The new name for the team.
+	-> GameId (integer, optional): The ID of the game the team is associated with.
+	-> Players (array of integers, optional): An updated list of player IDs who belong to the team. Each player ID should be an integer.
+- Response:
+204 No Content: The team was successfully updated. No content is returned.
+400 Bad Request: If the ID in the URL path does not match the ID in the request body.
+404 Not Found: If a team with the specified ID does not exist.
+500 Internal Server Error: If there is a concurrency issue or any other error while updating the team.
+
+5. DELETE /api/team/{id}
+- Description:
+This endpoint deletes an existing team from the system based on the provided team ID. Deleting a team removes all its associated data, including players.
+- Path Parameters:
+id (integer): The ID of the team to delete.
+- Response:
+204 No Content: The team was successfully deleted.
+404 Not Found: If the team with the specified ID does not exist in the system.
+
+
+================ GameController API Documentation ================
+1. GET /api/game
+- Description:
+This endpoint retrieves a list of all games in the system.
+- Query Parameters:
+None.
+- Response:
+200 OK: Returns a list of all games.
+
+2. GET /api/game/{id}
+- Description:
+This endpoint retrieves the details of a specific game by the provided game ID.
+- Path Parameters:
+id (integer): The ID of the game.
+- Response:
+200 OK: Returns the details of the specified game.
+404 Not Found: If the game with the specified ID does not exist.
+
+3. POST /api/game
+- Description:
+This endpoint creates a new game in the system with the provided game details.
+- Request Body:
+The request body should contain the following properties to create a new game:
+	-> Name (string, required): The name of the game.
+	-> Description (string, optional): A brief description of the game.
+	-> ReleaseDate (DateTime, optional): The release date of the game.
+	-> Genre (string, optional): The genre of the game (e.g., Action, RPG, etc.).
+	-> Publisher (string, optional): The publisher of the game.
+	-> Developer (string, optional): The developer of the game.
+- Response:
+201 Created: The game was successfully created, and the response contains the game details.
+400 Bad Request: If the provided game data is invalid or missing required fields.
+
+4. PUT /api/game/{id}
+- Description:
+This endpoint updates the details of an existing game based on the provided game ID. The game data in the request body must include the game’s ID, and the ID in the URL must match the one in the body.
+- Path Parameters:
+id (integer): The ID of the game to update.
+- Request Body:
+The request body should contain the updated game data with the following properties:
+	-> Id (integer, required): The ID of the game (this must match the ID in the URL path).
+	-> Name (string, required): The updated name of the game.
+	-> Description (string, optional): A new or updated description of the game.
+	-> ReleaseDate (DateTime, optional): The updated release date of the game.
+	-> Genre (string, optional): The updated genre of the game.
+	-> Publisher (string, optional): The updated publisher of the game.
+	-> Developer (string, optional): The updated developer of the game.
+- Response:
+204 No Content: The game was successfully updated.
+400 Bad Request: If the ID in the path does not match the ID in the request body.
+404 Not Found: If the game with the specified ID does not exist.
+500 Internal Server Error: If there is a concurrency issue or any other error while updating the game.
+
+5. DELETE /api/game/{id}
+- Description:
+This endpoint deletes a game from the system based on the provided game ID.
+- Path Parameters:
+id (integer): The ID of the game to delete.
+- Response:
+204 No Content: The game was successfully deleted.
+404 Not Found: If the game with the specified ID does not exist.
+
+
+================ AchievementController API Documentation ================
+The AchievementController manages operations related to achievements, including retrieving, creating, updating, and deleting achievement details within the system.
+
+1. GET /api/achievement
+- Description:
+This endpoint retrieves a list of all achievements, including associated game and player details.
+- Query Parameters:
+None.
+- Response:
+200 OK: Returns a list of achievements with their related game and player details.
+
+2. GET /api/achievement/{id}
+- Description:
+This endpoint retrieves the details of a specific achievement by the provided achievement ID.
+- Path Parameters:
+id (integer): The ID of the achievement.
+- Response:
+200 OK: Returns the details of the specified achievement along with its related game and player information.
+404 Not Found: If the achievement with the specified ID does not exist.
+
+3. POST /api/achievement
+- Description:
+This endpoint creates a new achievement in the system with the provided achievement details.
+- Request Body:
+The request body should contain the following properties to create a new achievement:
+	-> Name (string, required): The name of the achievement.
+	-> Description (string, optional): A brief description of the achievement.
+	-> GameId (integer, required): The ID of the associated game.
+	-> PlayerId (integer, required): The ID of the player who achieved this.
+	-> Points (integer, optional): The points awarded for achieving this achievement.
+- Response:
+201 Created: The achievement was successfully created, and the response contains the achievement details.
+400 Bad Request: If the provided achievement data is invalid or missing required fields.
+
+4. PUT /api/achievement/{id}
+- Description:
+This endpoint updates the details of an existing achievement based on the provided achievement ID. The achievement data in the request body must include the achievement ID, and the ID in the URL must match the one in the body.
+- Path Parameters:
+id (integer): The ID of the achievement to update.
+- Request Body:
+The request body should contain the updated achievement data with the following properties:
+	-> Id (integer, required): The ID of the achievement (this must match the ID in the URL path).
+	-> Name (string, required): The updated name of the achievement.
+	-> Description (string, optional): A new or updated description of the achievement.
+	-> GameId (integer, required): The updated ID of the associated game.
+	-> PlayerId (integer, required): The updated ID of the player associated with this achievement.
+	-> Points (integer, optional): The updated number of points awarded for this achievement.
+- Response:
+204 No Content: The achievement was successfully updated.
+400 Bad Request: If the ID in the path does not match the ID in the request body.
+404 Not Found: If the achievement with the specified ID does not exist.
+500 Internal Server Error: If there is a concurrency issue or another error while updating the achievement.
+
+5. DELETE /api/achievement/{id}
+- Description:
+This endpoint deletes an achievement from the system based on the provided achievement ID.
+- Path Parameters:
+id (integer): The ID of the achievement to delete.
+- Response:
+204 No Content: The achievement was successfully deleted.
+404 Not Found: If the achievement with the specified ID does not exist.
+
+
+================ LeaderboardController API Documentation ================
+The LeaderboardController manages operations related to leaderboards, including retrieving, creating, updating, and deleting leaderboard entries within the system.
+
+1. GET /api/leaderboard
+- Description:
+This endpoint retrieves a list of all leaderboards, including associated game and player details.
+- Query Parameters:
+None.
+- Response:
+200 OK: Returns a list of leaderboard entries with their related game and player details.
+
+2. GET /api/leaderboard/{id}
+- Description:
+This endpoint retrieves the details of a specific leaderboard entry by the provided leaderboard ID.
+- Path Parameters:
+id (integer): The ID of the leaderboard entry.
+- Response:
+200 OK: Returns the details of the specified leaderboard entry along with its related game and player information.
+404 Not Found: If the leaderboard with the specified ID does not exist.
+
+3. POST /api/leaderboard
+- Description:
+This endpoint creates a new leaderboard entry in the system with the provided leaderboard details.
+- Request Body:
+The request body should contain the following properties to create a new leaderboard entry:
+	-> PlayerId (integer, required): The ID of the player associated with the leaderboard entry.
+	-> GameId (integer, required): The ID of the associated game.
+	-> Score (integer, required): The score achieved by the player in the game.
+	-> Rank (integer, required): The player's rank in the leaderboard.
+- Response:
+201 Created: The leaderboard entry was successfully created, and the response contains the leaderboard details.
+400 Bad Request: If the provided leaderboard data is invalid or missing required fields.
+
+4. PUT /api/leaderboard/{id}
+- Description:
+This endpoint updates the details of an existing leaderboard entry based on the provided leaderboard ID. The leaderboard data in the request body must include the leaderboard ID, and the ID in the URL must match the one in the body.
+- Path Parameters:
+id (integer): The ID of the leaderboard entry to update.
+- Request Body:
+The request body should contain the updated leaderboard data with the following properties:
+	-> Id (integer, required): The ID of the leaderboard entry (this must match the ID in the URL path).
+	-> PlayerId (integer, required): The updated ID of the player associated with the leaderboard entry.
+	-> GameId (integer, required): The updated ID of the associated game.
+	-> Score (integer, required): The updated score of the player in the game.
+	-> Rank (integer, required): The updated rank of the player in the leaderboard.
+- Response:
+204 No Content: The leaderboard entry was successfully updated.
+400 Bad Request: If the ID in the path does not match the ID in the request body.
+404 Not Found: If the leaderboard entry with the specified ID does not exist.
+500 Internal Server Error: If there is a concurrency issue or another error while updating the leaderboard entry.
+
+5. DELETE /api/leaderboard/{id}
+- Description:
+This endpoint deletes a leaderboard entry from the system based on the provided leaderboard ID.
+- Path Parameters:
+id (integer): The ID of the leaderboard entry to delete.
+- Response:
+204 No Content: The leaderboard entry was successfully deleted.
+404 Not Found: If the leaderboard entry with the specified ID does not exist.

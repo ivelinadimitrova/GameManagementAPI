@@ -1,0 +1,7 @@
+1) Install dotnet-ef Tool
+dotnet tool install --global dotnet-ef
+2) Verify Installation
+dotnet ef --version
+3) Once the tool is installed and accessible, rerun the commands to add migrations and update the database:
+dotnet ef migrations add InitialCreate
+dotnet ef database update
